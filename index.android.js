@@ -7,6 +7,7 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+  NativeModules,
   StyleSheet,
   Text,
   TextInput,
@@ -35,6 +36,8 @@ class ShortcutsForSlack extends Component {
 
   _createShortcut() {
     console.log("Creating with", {shortcutName, shortcutLink} = this.state);
+
+    NativeModules.ShortcutsAndroid.show(this.state.shortcutName, this.state.shortcutLink);
   }
 
   render() {
@@ -63,7 +66,7 @@ class ShortcutsForSlack extends Component {
             </View>
           </TouchableWithoutFeedback>
           <TextInput
-            ref="shortcutName"
+            ref="shortcutLink"
             onChangeText={(value) => this._onFieldChangeText("shortcutLink", value)}
             value={this.state.shortcutLink}
             returnKeyType="go"

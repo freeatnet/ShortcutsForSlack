@@ -9,23 +9,71 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
+  TextInput,
+  TouchableWithoutFeedback,
   View
 } from 'react-native';
 
+import Button from 'react-native-button';
+
 class ShortcutsForSlack extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      shortcutName: "",
+      shortcutLink: ""
+    }
+  }
+
+  _onFieldChangeText(field, value) {
+    console.log("Field", field, "changed its value to", value);
+    var stateUpdate = {};
+    stateUpdate[field] = value;
+    this.setState(stateUpdate);
+  }
+
+  _createShortcut() {
+    console.log("Creating with", {shortcutName, shortcutLink} = this.state);
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
+        <Text style={styles.header}>
+          Add a shortcut
         </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
+        <View>
+          <TouchableWithoutFeedback onPress={() => this.refs.shortcutName.focus()}>
+            <View>
+              <Text style={styles.inputLabel}>Shortcut name</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TextInput
+            ref="shortcutName"
+            onChangeText={(value) => this._onFieldChangeText("shortcutName", value)}
+            value={this.state.shortcutName}
+            returnKeyType="next"
+            />
+        </View>
+        <View>
+          <TouchableWithoutFeedback onPress={() => this.refs.shortcutLink.focus()}>
+            <View>
+              <Text style={styles.inputLabel}>Shortcut link</Text>
+            </View>
+          </TouchableWithoutFeedback>
+          <TextInput
+            ref="shortcutName"
+            onChangeText={(value) => this._onFieldChangeText("shortcutLink", value)}
+            value={this.state.shortcutLink}
+            returnKeyType="go"
+            />
+        </View>
+        <View>
+          <Button onPress={() => this._createShortcut()}>
+            CREATE
+          </Button>
+        </View>
       </View>
     );
   }
@@ -33,20 +81,17 @@ class ShortcutsForSlack extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    margin: 10
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  header: {
+    fontSize: 32,
+    color: 'rgb(73, 134, 210)'
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  inputLabel: {
+    fontSize: 18,
+    fontWeight: "300",
+    color: 'rgb(73, 134, 210)',
+    marginTop: 8
   },
 });
 

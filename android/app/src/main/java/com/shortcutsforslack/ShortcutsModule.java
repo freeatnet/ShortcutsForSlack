@@ -2,6 +2,8 @@ package com.shortcutsforslack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -28,7 +30,7 @@ public class ShortcutsModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void show(String displayName, String url) {
+    public void install(String displayName, String url, String iconFilepath) {
         Intent shortcutIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         shortcutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
@@ -38,7 +40,10 @@ public class ShortcutsModule extends ReactContextBaseJavaModule {
         // Sets the custom shortcut's title
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, displayName);
         // Set the custom shortcut icon
-//        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_action_search));
+        // Decoding & scaling as seen on http://stackoverflow.com/a/4803757/215024
+        Bitmap theBitmap = BitmapFactory.decodeFile(iconFilepath);
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(theBitmap, 128, 128, true);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, scaledBitmap);
         intent.putExtra("duplicate", false);
 
         // add the shortcut

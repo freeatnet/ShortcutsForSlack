@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 
 import Button from 'react-native-button';
+import RNFS from 'react-native-fs';
 
 import * as CommonStyles from './CommonStyles';
 
@@ -54,10 +55,17 @@ class ShortcutsForSlack extends Component {
       if (response.ok) {
         response.json().then((responseJSON) => {
           if (responseJSON.ok) {
+            let teamData = responseJSON.team;
+
             var stateUpdate = {};
-            stateUpdate["team:" + authentication.team_id + ":info"] = responseJSON.team;
+            stateUpdate["team:" + authentication.team_id + ":info"] = teamData;
 
             this.setState(stateUpdate);
+
+            RNFS.downloadFile({
+              fromUrl: teamData.icon.image_132,
+              toFile: [RNFS.DocumentDirectoryPath, teamData.id].join("/")
+            });
           } else {
             console.warn("team.info request for", authentication.team_id, "failed: API returned 'ok'", responseJSON.ok);
           }
@@ -139,7 +147,12 @@ class ShortcutsForSlack extends Component {
   _createShortcut() {
     console.log("Creating with", {shortcutName, shortcutLink} = this.state);
 
-    NativeModules.ShortcutsAndroid.show(this.state.shortcutName, this.state.shortcutLink);
+    let selectedTeamData = this.state["team:" + this.state.selectedTeamID + ":info"];
+    NativeModules.ShortcutsAndroid.install(
+      this.state.shortcutName,
+      this.state.shortcutLink,
+      [RNFS.DocumentDirectoryPath, selectedTeamData.id].join("/")
+    );
   }
 
   render() {

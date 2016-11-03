@@ -28,3 +28,8 @@ You can add the token into [`index.android.js`](index.android.js)'s
 aptly-named `DummyTokens`.
 
 If there's demand for in-app authentication, I might add it.
+
+## License
+This project's source code is licensed under the
+[MIT license](LICENSE.txt). This application is not created by,
+affiliated with, or supported by Slack Technologies, Inc.
